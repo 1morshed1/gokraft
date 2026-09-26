@@ -44,8 +44,8 @@ func main() {
 	logStore, err := clickhouse.Open(
 		config.String("CLICKHOUSE_ADDR", "localhost:9000"),
 		config.String("CLICKHOUSE_DB", "gokraft"),
-		config.String("CLICKHOUSE_USER", "default"),
-		config.String("CLICKHOUSE_PASS", ""),
+		config.String("CLICKHOUSE_USER", "gokraft"),
+		config.String("CLICKHOUSE_PASS", "gokraft"),
 	)
 	if err != nil {
 		log.Error("connect clickhouse", "err", err)

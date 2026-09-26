@@ -1,0 +1,23 @@
+<!--
+  A dedicated ClickHouse user for gokraft.
+
+  The official image ships a `default` user restricted to localhost
+  (127.0.0.1/::1), so the writers and query API — which connect from other
+  containers or over the mapped port — cannot use it. Rather than weaken the
+  default user, we add a purpose-made `gokraft` user reachable from the cluster
+  network with a password. For a real deployment, put the password in a Secret
+  and tighten the <networks> CIDR.
+-->
+<clickhouse>
+  <users>
+    <gokraft>
+      <password>gokraft</password>
+      <networks>
+        <ip>::/0</ip>
+      </networks>
+      <profile>default</profile>
+      <quota>default</quota>
+      <access_management>1</access_management>
+    </gokraft>
+  </users>
+</clickhouse>

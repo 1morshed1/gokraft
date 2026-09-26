@@ -36,7 +36,11 @@ make run-loadgen       # generate traffic
 ```
 
 Every binary is configured entirely by environment variables (see
-`internal/config`), so overriding a port or DSN is a one-liner.
+`internal/config`), so overriding a port or DSN is a one-liner. The `run-*`
+targets set two host-specific values for you: `KAFKA_BROKERS=localhost:29092`
+(the broker's **host** listener — containers use `kafka:9092` instead; see
+[doc 06](06-debugging-journey.md) for why there are two) and the ClickHouse
+`gokraft` user credentials.
 
 ## The load generator (`cmd/loadgen`)
 
@@ -101,6 +105,16 @@ bursty part, and **writers scale by Kafka consumer group** (add replicas, Kafka
 rebalances partitions). The collector wires the **Downward API** into the
 `StaticEnricher`, so K8s enrichment is real, not theoretical. See
 `deploy/k8s/README.md`.
+
+## This was verified end to end
+
+The compose stack and pipeline in this repo were run for real: a 12s load run
+populated all three databases with consistent counts (~2,270 logs at ~4% errors,
+~4,540 metrics across 10 services, ~4,520 spans across ~2,260 traces), and the
+correlation endpoint joined an error trace with its matching log. Getting there
+surfaced four classic integration bugs — read
+[`06-debugging-journey.md`](06-debugging-journey.md) for the war stories, which
+are as instructive as the design itself.
 
 That's the whole platform. Read the ADRs in [`../decisions/`](../decisions/) for
 the reasoning behind the big trade-offs, condensed.

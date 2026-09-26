@@ -100,5 +100,23 @@ go test ./...
 ## Where to learn
 
 Start with [`docs/learning/00-overview.md`](docs/learning/00-overview.md) and
-read the numbered docs in order. Architectural decisions with trade-offs are
-recorded as ADRs in [`docs/decisions/`](docs/decisions/).
+read the numbered docs in order:
+
+- [00 — Overview](docs/learning/00-overview.md)
+- [01 — The Collector](docs/learning/01-collector.md)
+- [02 — Storage (one DB per signal)](docs/learning/02-storage.md)
+- [03 — The Query API + correlation](docs/learning/03-query-api.md)
+- [04 — The Alerting engine](docs/learning/04-alerting.md)
+- [05 — Running + load testing](docs/learning/05-run-and-loadtest.md)
+- [06 — Debugging journey (four real integration bugs)](docs/learning/06-debugging-journey.md)
+
+Architectural decisions with trade-offs are recorded as ADRs in
+[`docs/decisions/`](docs/decisions/).
+
+## Status
+
+Built and **verified end to end**: the docker-compose stack runs, and a load
+run populates ClickHouse, TimescaleDB, and PostgreSQL with consistent data while
+the query API serves search, metrics, trace waterfalls, live tail, and
+cross-signal correlation. All pure-logic packages have unit tests
+(`go test ./...`).

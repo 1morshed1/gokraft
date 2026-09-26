@@ -64,17 +64,22 @@ loadgen: ## Push synthetic traffic at the running collector
 logs: ## Tail logs of the gokraft services
 	docker compose logs -f collector logwriter metricwriter tracewriter queryapi
 
-# --- run individual binaries locally (against infra-up) ---
+# --- run individual binaries locally (against `make infra-up`) ---
+# These point at the HOST-facing broker (localhost:29092, see the kafka service's
+# dual listener) and the ClickHouse `gokraft` user, so they work out of the box
+# against the compose infra. Containers use kafka:9092 instead (set in compose).
+HOST_ENV := KAFKA_BROKERS=localhost:29092 CLICKHOUSE_USER=gokraft CLICKHOUSE_PASS=gokraft
+
 .PHONY: run-collector run-logwriter run-metricwriter run-tracewriter run-queryapi run-loadgen
 run-collector: ## Run the collector locally
-	go run ./cmd/collector
+	$(HOST_ENV) go run ./cmd/collector
 run-logwriter: ## Run the log writer locally
-	go run ./cmd/logwriter
+	$(HOST_ENV) go run ./cmd/logwriter
 run-metricwriter: ## Run the metric writer locally
-	go run ./cmd/metricwriter
+	$(HOST_ENV) go run ./cmd/metricwriter
 run-tracewriter: ## Run the trace writer locally
-	go run ./cmd/tracewriter
+	$(HOST_ENV) go run ./cmd/tracewriter
 run-queryapi: ## Run the query API + dashboard locally
-	go run ./cmd/queryapi
-run-loadgen: ## Run the load generator locally
+	$(HOST_ENV) go run ./cmd/queryapi
+run-loadgen: ## Run the load generator locally (talks to the collector, not Kafka)
 	go run ./cmd/loadgen

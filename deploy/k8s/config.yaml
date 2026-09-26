@@ -8,6 +8,8 @@ metadata:
 data:
   KAFKA_BROKERS: "kafka.gokraft.svc:9092"
   CLICKHOUSE_ADDR: "clickhouse.gokraft.svc:9000"
+  CLICKHOUSE_USER: "gokraft"
+  CLICKHOUSE_PASS: "gokraft"
   TIMESCALE_DSN: "postgres://gokraft:gokraft@timescale.gokraft.svc:5432/metrics"
   POSTGRES_DSN: "postgres://gokraft:gokraft@postgres.gokraft.svc:5432/traces"
   LOG_LEVEL: "info"

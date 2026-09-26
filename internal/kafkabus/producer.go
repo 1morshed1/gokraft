@@ -59,6 +59,13 @@ func NewProducer(brokers []string, topic string) *Producer {
 			RequiredAcks: kafka.RequireOne,
 			Async:        false, // synchronous: WriteMessages returns after the broker acks
 			BatchSize:    1000,  // kafka-go groups writes; our batcher already bulks upstream
+			// kafka-go does NOT request topic creation by default, so even with
+			// the broker's auto.create.topics.enable=true a first produce to a
+			// missing topic fails with UnknownTopicOrPartition. Enabling this
+			// makes the writer send the metadata that triggers creation — handy
+			// for dev. In production you'd pre-create topics with an explicit
+			// partition count and disable this.
+			AllowAutoTopicCreation: true,
 		},
 	}
 }
