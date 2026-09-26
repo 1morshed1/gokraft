@@ -1,0 +1,13 @@
+# Shared connection settings for all gokraft services. In a real cluster the
+# database credentials would live in a Secret, not a ConfigMap; kept simple here.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gokraft-config
+  namespace: gokraft
+data:
+  KAFKA_BROKERS: "kafka.gokraft.svc:9092"
+  CLICKHOUSE_ADDR: "clickhouse.gokraft.svc:9000"
+  TIMESCALE_DSN: "postgres://gokraft:gokraft@timescale.gokraft.svc:5432/metrics"
+  POSTGRES_DSN: "postgres://gokraft:gokraft@postgres.gokraft.svc:5432/traces"
+  LOG_LEVEL: "info"

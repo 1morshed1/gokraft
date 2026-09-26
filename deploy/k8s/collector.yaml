@@ -1,0 +1,69 @@
+# The collector: stateless OTLP ingress, autoscaled on CPU. This is the elastic
+# front of the pipeline — replicas grow with incoming telemetry volume.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector
+  namespace: gokraft
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: collector }
+  template:
+    metadata:
+      labels: { app: collector }
+    spec:
+      containers:
+        - name: collector
+          image: gokraft/collector:latest
+          ports:
+            - containerPort: 4317
+          envFrom:
+            - configMapRef: { name: gokraft-config }
+          env:
+            # Downward API: inject this pod's identity so the StaticEnricher can
+            # tag every signal with its Kubernetes context (see internal/enrich).
+            - name: K8S_POD_NAME
+              valueFrom: { fieldRef: { fieldPath: metadata.name } }
+            - name: K8S_NAMESPACE
+              valueFrom: { fieldRef: { fieldPath: metadata.namespace } }
+            - name: K8S_NODE_NAME
+              valueFrom: { fieldRef: { fieldPath: spec.nodeName } }
+          resources:
+            requests: { cpu: "250m", memory: "128Mi" }
+            limits: { cpu: "1", memory: "512Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collector
+  namespace: gokraft
+spec:
+  selector: { app: collector }
+  ports:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+---
+# HorizontalPodAutoscaler: scale the collector between 2 and 10 replicas to keep
+# average CPU near 70%. CPU is a good proxy here because the collector's work
+# (protobuf decode + JSON encode) is CPU-bound.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: collector
+  namespace: gokraft
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: collector
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

@@ -1,0 +1,41 @@
+# The query API + dashboard + alerting engine. Exposed via a Service; front it
+# with an Ingress in a real cluster. Liveness/readiness probes hit /healthz.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queryapi
+  namespace: gokraft
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: queryapi } }
+  template:
+    metadata: { labels: { app: queryapi } }
+    spec:
+      containers:
+        - name: queryapi
+          image: gokraft/queryapi:latest
+          ports: [{ containerPort: 8080 }]
+          envFrom: [{ configMapRef: { name: gokraft-config } }]
+          readinessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /healthz, port: 8080 }
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests: { cpu: "100m", memory: "128Mi" }
+            limits: { cpu: "500m", memory: "512Mi" }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: queryapi
+  namespace: gokraft
+spec:
+  selector: { app: queryapi }
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080

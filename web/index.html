@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>gokraft</title>
+  <!--
+    The dashboard is deliberately simple: vanilla JS, one file, Chart.js from a
+    CDN. The backend is the showcase. It talks to the query API on the same
+    origin (/api/v1/*), so no build step and no framework are needed. Each tab
+    maps to one or two API endpoints; read app.js alongside the query handlers
+    to see the full request/response contract.
+  -->
+  <link rel="stylesheet" href="/static/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>gokraft</h1>
+    <span class="tag">mini observability platform</span>
+    <span id="health" class="health">●</span>
+  </header>
+
+  <nav id="tabs">
+    <button data-tab="logs" class="active">Logs</button>
+    <button data-tab="metrics">Metrics</button>
+    <button data-tab="traces">Traces</button>
+    <button data-tab="tail">Live Tail</button>
+    <button data-tab="alerts">Alerts</button>
+  </nav>
+
+  <main>
+    <!-- LOGS -->
+    <section id="logs" class="panel active">
+      <form id="log-form" class="controls">
+        <input name="q" placeholder="search body…" />
+        <input name="service" placeholder="service" />
+        <select name="severity">
+          <option value="">any severity</option>
+          <option>INFO</option><option>WARN</option><option>ERROR</option><option>FATAL</option>
+        </select>
+        <select name="from">
+          <option value="-15m">last 15m</option>
+          <option value="-1h" selected>last 1h</option>
+          <option value="-24h">last 24h</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+      <div id="log-results" class="results"></div>
+    </section>
+
+    <!-- METRICS -->
+    <section id="metrics" class="panel">
+      <form id="metric-form" class="controls">
+        <input name="metric" value="http_request_duration_ms" placeholder="metric" />
+        <input name="service" placeholder="service (optional)" />
+        <select name="aggregation">
+          <option value="avg">avg</option><option value="max">max</option>
+          <option value="min">min</option><option value="sum">sum</option>
+        </select>
+        <select name="from">
+          <option value="-15m">last 15m</option>
+          <option value="-1h" selected>last 1h</option>
+          <option value="-24h">last 24h</option>
+          <option value="-168h">last 7d</option>
+        </select>
+        <button type="submit">Query</button>
+      </form>
+      <canvas id="metric-chart" height="110"></canvas>
+    </section>
+
+    <!-- TRACES -->
+    <section id="traces" class="panel">
+      <form id="trace-form" class="controls">
+        <input name="service" placeholder="service (optional)" />
+        <label><input type="checkbox" name="only_errors" /> errors only</label>
+        <button type="submit">Search traces</button>
+      </form>
+      <div class="split">
+        <div id="trace-list" class="results"></div>
+        <div id="trace-detail" class="waterfall"></div>
+      </div>
+    </section>
+
+    <!-- LIVE TAIL -->
+    <section id="tail" class="panel">
+      <form id="tail-form" class="controls">
+        <input name="service" placeholder="service" />
+        <input name="q" placeholder="filter body…" />
+        <button type="submit" id="tail-toggle">Start tail</button>
+      </form>
+      <div id="tail-results" class="results tail"></div>
+    </section>
+
+    <!-- ALERTS -->
+    <section id="alerts" class="panel">
+      <div id="alert-list" class="results"></div>
+    </section>
+  </main>
+</body>
+</html>

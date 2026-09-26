@@ -1,0 +1,55 @@
+/* gokraft dashboard styles — a compact dark theme. Nothing clever; the point is
+   legibility, not design flourish. */
+:root {
+  --bg: #0d1117; --panel: #161b22; --border: #30363d;
+  --fg: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+  --info: #3fb950; --warn: #d29922; --error: #f85149;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.5 ui-monospace, "SF Mono", Menlo, monospace; background: var(--bg); color: var(--fg); }
+header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+header h1 { margin: 0; font-size: 18px; color: var(--accent); }
+.tag { color: var(--muted); font-size: 12px; }
+.health { margin-left: auto; color: var(--muted); font-size: 18px; }
+.health.ok { color: var(--info); }
+.health.down { color: var(--error); }
+
+nav { display: flex; gap: 4px; padding: 8px 20px; border-bottom: 1px solid var(--border); }
+nav button { background: none; border: none; color: var(--muted); padding: 6px 14px; cursor: pointer; border-radius: 6px; font: inherit; }
+nav button.active, nav button:hover { background: var(--panel); color: var(--fg); }
+
+main { padding: 20px; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; align-items: center; }
+.controls input, .controls select { background: var(--panel); border: 1px solid var(--border); color: var(--fg); padding: 6px 10px; border-radius: 6px; font: inherit; }
+.controls button { background: var(--accent); border: none; color: #0d1117; padding: 6px 16px; border-radius: 6px; cursor: pointer; font: inherit; font-weight: 600; }
+.controls label { color: var(--muted); }
+
+.results { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; max-height: 65vh; overflow: auto; }
+.results.tail { max-height: 70vh; }
+.row { display: grid; grid-template-columns: 180px 70px 120px 1fr; gap: 10px; padding: 6px 12px; border-bottom: 1px solid var(--border); align-items: baseline; }
+.row:hover { background: #1c2333; }
+.row .ts { color: var(--muted); font-size: 12px; }
+.sev-INFO { color: var(--info); } .sev-WARN { color: var(--warn); }
+.sev-ERROR, .sev-FATAL { color: var(--error); }
+.row .body { white-space: pre-wrap; word-break: break-word; }
+.row .trace-link { color: var(--accent); cursor: pointer; text-decoration: underline; }
+.empty { padding: 20px; color: var(--muted); }
+
+.split { display: grid; grid-template-columns: 1fr 1.3fr; gap: 16px; }
+.trace-item { padding: 8px 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.trace-item:hover { background: #1c2333; }
+.trace-item.err { border-left: 3px solid var(--error); }
+.waterfall { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 65vh; overflow: auto; }
+.span-bar { position: relative; height: 22px; margin: 3px 0; background: #21262d; border-radius: 3px; }
+.span-fill { position: absolute; height: 100%; background: var(--accent); border-radius: 3px; opacity: .8; }
+.span-fill.err { background: var(--error); }
+.span-label { position: absolute; left: 6px; top: 2px; font-size: 12px; white-space: nowrap; }
+
+.alert-card { padding: 12px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center; }
+.badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.badge.ok { background: #23863633; color: var(--info); }
+.badge.pending { background: #d2992233; color: var(--warn); }
+.badge.firing { background: #f8514933; color: var(--error); }

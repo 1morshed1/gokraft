@@ -1,0 +1,63 @@
+# The three writers. Each is an independent Deployment so they scale and fail in
+# isolation — a backed-up ClickHouse can't stall metric ingestion. Scale any one
+# with `kubectl scale deployment/logwriter --replicas=N`; Kafka rebalances the
+# topic's partitions across the replicas because they share a consumer group.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logwriter
+  namespace: gokraft
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: logwriter } }
+  template:
+    metadata: { labels: { app: logwriter } }
+    spec:
+      containers:
+        - name: logwriter
+          image: gokraft/logwriter:latest
+          envFrom: [{ configMapRef: { name: gokraft-config } }]
+          env: [{ name: KAFKA_GROUP, value: "logwriter" }]
+          resources:
+            requests: { cpu: "100m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metricwriter
+  namespace: gokraft
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: metricwriter } }
+  template:
+    metadata: { labels: { app: metricwriter } }
+    spec:
+      containers:
+        - name: metricwriter
+          image: gokraft/metricwriter:latest
+          envFrom: [{ configMapRef: { name: gokraft-config } }]
+          env: [{ name: KAFKA_GROUP, value: "metricwriter" }]
+          resources:
+            requests: { cpu: "100m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracewriter
+  namespace: gokraft
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: tracewriter } }
+  template:
+    metadata: { labels: { app: tracewriter } }
+    spec:
+      containers:
+        - name: tracewriter
+          image: gokraft/tracewriter:latest
+          envFrom: [{ configMapRef: { name: gokraft-config } }]
+          env: [{ name: KAFKA_GROUP, value: "tracewriter" }]
+          resources:
+            requests: { cpu: "100m", memory: "64Mi" }
+            limits: { cpu: "500m", memory: "256Mi" }
