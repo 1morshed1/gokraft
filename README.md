@@ -3,14 +3,14 @@
 [![CI](https://github.com/1morshed1/gokraft/actions/workflows/ci.yml/badge.svg)](https://github.com/1morshed1/gokraft/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-gokraft is a teaching-grade clone of the core of Datadog / Grafana Cloud /
+gokraft is a from-scratch implementation of the core of Datadog / Grafana Cloud /
 Elastic Stack. It ingests **logs, metrics, and traces** over the OpenTelemetry
 protocol (OTLP), buffers them through Kafka, stores each signal in a database
 chosen for that signal's access pattern, and serves queries and a dashboard on
 top. It also runs a small alerting engine.
 
-The goal is **learning**, not production. Every non-obvious decision is written
-down in [`docs/`](docs/) so you can understand *why* the system is shaped the
+Every non-obvious decision is written down in [`docs/`](docs/) so you can
+understand *why* the system is shaped the
 way it is, not just *what* the code does.
 
 ## The big picture
@@ -99,7 +99,7 @@ for the pure-logic packages):
 go test ./...
 ```
 
-## Where to learn
+## Design docs
 
 Start with [`docs/learning/00-overview.md`](docs/learning/00-overview.md) and
 read the numbered docs in order:
