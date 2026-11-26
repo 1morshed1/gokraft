@@ -22,4 +22,4 @@ Use a purpose-fit store per signal:
 
 Trade accepted because the query-performance and isolation wins are exactly the
 point of the project. At small scale you *could* collapse metrics into ClickHouse
-too (noted in the plan) for one fewer database.
+too (noted in the spec) for one fewer database.

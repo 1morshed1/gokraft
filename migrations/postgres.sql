@@ -5,7 +5,7 @@
 -- access pattern is relational: "give me every span with this trace_id, then
 -- rebuild the parent/child tree". That is exactly what a well-indexed relational
 -- table with JSONB for the flexible bits does best. At much higher scale you'd
--- move traces to ClickHouse or ScyllaDB, but for a portfolio platform Postgres
+-- move traces to ClickHouse or ScyllaDB, but for a demo-scale platform Postgres
 -- is the pragmatic, boring, correct choice.
 --
 -- Run: psql "$POSTGRES_DSN" -f migrations/postgres.sql

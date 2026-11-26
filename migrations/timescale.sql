@@ -61,7 +61,7 @@ SELECT add_continuous_aggregate_policy('metrics_1m',
 -- 1-hour rollups, computed FROM the 1-minute rollups (cheaper than re-scanning
 -- raw data). Note we must re-aggregate correctly: avg-of-avgs is only valid
 -- here because bucket sizes are uniform; for exactness at scale you'd weight by
--- sample_count. Kept simple for learning.
+-- sample_count. Kept deliberately simple.
 CREATE MATERIALIZED VIEW IF NOT EXISTS metrics_1h
 WITH (timescaledb.continuous) AS
 SELECT

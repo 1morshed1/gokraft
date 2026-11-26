@@ -76,9 +76,9 @@ exercises every read path:
 - **Live Tail** — a WebSocket stream of new logs matching a filter.
 - **Alerts** — the seeded rules with their live `ok`/`pending`/`firing` state.
 
-## Load-testing targets (from the plan)
+## Load-testing targets (from the spec)
 
-The plan sets these goals; here's how to measure them with the tools in the repo:
+The spec sets these goals; here's how to measure them with the tools in the repo:
 
 | Target | How to measure |
 |--------|----------------|

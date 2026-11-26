@@ -1,5 +1,8 @@
 # gokraft — a mini observability platform, built from scratch in Go
 
+[![CI](https://github.com/1morshed1/gokraft/actions/workflows/ci.yml/badge.svg)](https://github.com/1morshed1/gokraft/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 gokraft is a teaching-grade clone of the core of Datadog / Grafana Cloud /
 Elastic Stack. It ingests **logs, metrics, and traces** over the OpenTelemetry
 protocol (OTLP), buffers them through Kafka, stores each signal in a database
@@ -22,7 +25,6 @@ way it is, not just *what* the code does.
                                                                                    Alerting engine
 ```
 
-Read the plan this was built from in [`plan.md`](plan.md).
 
 ## Why one database per signal?
 
@@ -120,3 +122,7 @@ run populates ClickHouse, TimescaleDB, and PostgreSQL with consistent data while
 the query API serves search, metrics, trace waterfalls, live tail, and
 cross-signal correlation. All pure-logic packages have unit tests
 (`go test ./...`).
+
+## License
+
+[MIT](LICENSE)

@@ -70,8 +70,8 @@ not a concrete implementation.
 - A future `APIServerEnricher` could resolve the *sender's* identity by querying
   the Kubernetes API for the pod with a matching IP and caching it ~60s. It
   drops in behind the same interface without changing any caller. We describe it
-  but don't wire it in, to avoid pulling the large `client-go` dependency into a
-  learning project.
+  but don't wire it in, to avoid pulling the large `client-go` dependency into the
+  project.
 
 ## Batching: the single most important throughput lever
 

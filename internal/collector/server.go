@@ -24,7 +24,7 @@ import (
 )
 
 // Config controls the collector's batching and connectivity. Sensible defaults
-// come from the plan: flush at 1,000 records or every 500ms, whichever first.
+// come from the spec: flush at 1,000 records or every 500ms, whichever first.
 type Config struct {
 	ListenAddr  string        // gRPC bind address, e.g. ":4317" (the OTLP default port)
 	Brokers     []string      // Kafka brokers
